@@ -8,6 +8,7 @@ import { FlatList } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import BottomBar from "./component/BottomBar";
 import { useCallback } from 'react';
+import serverApi from "../api/serverApi";
 
 
 
@@ -32,10 +33,37 @@ import { useCallback } from 'react';
 
 
 const DetailScreen = ({navigation,route}) => {
-    React.useEffect(() => {
-
-    })
     const {   selectedDevices,item } = route.params;
+    const { device_id, district, address } = item;
+    const [ information, setInformation ] = React.useState({
+        rain:"",
+        temp:32,
+        hummid:"",
+        flood_level:0
+    })
+    const [encodeImage, setEncodeImage] = React.useState("")
+    React.useEffect(() => {
+        serverApi.get('/getDatas', {
+           params: {
+            device_id: device_id,
+            latest: 1,
+           }
+        })
+        .then((res) => {
+            
+            setInformation(res.data)
+            serverApi.get('/getImage', {
+                params: {
+                 id: res.data.id
+                }
+             })
+             .then((res) => {
+             
+                setEncodeImage(res.data.image)
+             })
+        })
+    }, [item])
+    
 
     const onPressHandler = () => {
        // navigation.navigate('SearchList',{selectedDevices: selectedDevices, setSelect: memoizedSetSelect})
@@ -45,41 +73,43 @@ const DetailScreen = ({navigation,route}) => {
     // const information = route.params.information;
     // const name = route.params.name;
    
-    const { device_id, district,location,information } = item;
     const bgColor = '#9F4D00'
+    const levelColor = [['#84807C', '#84807C', '#84807C','#FFFFFF'],['#00B112','#84807C','#84807C','#00FA64'],['#00B112','#FFE604', '#84807C','#F5FA00'], ['#00B112','#FFE604','#E10000','#FA0000']]
+    const textColor = ["No Flood", "Low", "High", "Critical"]
+    const stateIOT = ["Suspending", "Working"]
+    // const floodLevel = information.flood_level;
+    // let rectangleColor1;
+    // let rectangleColor2;
+    // let rectangleColor3;
+    // let textcolor
+    //  switch (floodLevel) {
+    //         case 0:
+    //             rectangleColor1 = '#84807C';
+    //             rectangleColor2 = '#84807C';
+    //             rectangleColor3 = '#84807C';
+    //             textcolor = '#FFFFFF'
+    //             break;
+    //         case 1:
+    //             rectangleColor1 = '#00B112';
+    //             rectangleColor2 = '#84807C';
+    //             rectangleColor3 = '#84807C';
+    //             textcolor = '#00FA64'
+    //             break;
+    //         case 2:
+    //             rectangleColor1 = '#00B112';
+    //             rectangleColor2 = '#FFE604';
+    //             rectangleColor3 = '#84807C';
+    //             textcolor = '#F5FA00'
+    //             break;
+    //         case 3:
+    //             rectangleColor1 = '#00B112';
+    //             rectangleColor2 = '#FFE604';
+    //             rectangleColor3 = '#E10000';
+    //             textcolor = '#FA0000'
 
-    const floodLevel = information.flood;
-    let rectangleColor1;
-    let rectangleColor2;
-    let rectangleColor3;
-    let textcolor
-     switch (floodLevel) {
-            case 'No flood':
-                rectangleColor1 = '#84807C';
-                rectangleColor2 = '#84807C';
-                rectangleColor3 = '#84807C';
-                textcolor = '#FFFFFF'
-                break;
-            case 'Low':
-                rectangleColor1 = '#00B112';
-                rectangleColor2 = '#84807C';
-                rectangleColor3 = '#84807C';
-                textcolor = '#00FA64'
-                break;
-            case 'High':
-                rectangleColor1 = '#00B112';
-                rectangleColor2 = '#FFE604';
-                rectangleColor3 = '#84807C';
-                textcolor = '#F5FA00'
-                break;
-            case 'Critical':
-                rectangleColor1 = '#00B112';
-                rectangleColor2 = '#FFE604';
-                rectangleColor3 = '#E10000';
-                textcolor = '#FA0000'
-
-                break;
-            }
+    //             break;
+    //         }
+ 
     return(
     
     <LinearGradient
@@ -90,7 +120,7 @@ const DetailScreen = ({navigation,route}) => {
         >
             <StatusBar style="auto" androidStatusBar="none" />
             <View style ={{flex:5,justifyContent:'center',alignItems:'center'}}>
-                <Text style={{fontSize:30,fontWeight:'bold',color:'white',textShadowRadius:10}}>{location}</Text>
+                <Text style={{fontSize:30,fontWeight:'bold',color:'white',textShadowRadius:10}}>{address}</Text>
             </View>
             <View style ={{flex:20,justifyContent:'center',alignItems:'center'}}>
 
@@ -109,7 +139,7 @@ const DetailScreen = ({navigation,route}) => {
                     <View style={styles.container}>
                         <View style={[styles.box, styles.box1]}>
                             <Text style ={styles.text_value}>
-                                {information.temp}
+                                {information.temp}&deg;C
                             </Text>
 
                             <Text style ={styles.text_category}>
@@ -120,7 +150,7 @@ const DetailScreen = ({navigation,route}) => {
                         <View style={styles.line}></View>
                         <View style={[styles.box,styles.box2]}>
                             <Text style ={styles.text_value}>
-                                {information.humid}
+                                {information.hummid*100}%
                             </Text>
 
                             <Text style ={styles.text_category}>
@@ -133,7 +163,7 @@ const DetailScreen = ({navigation,route}) => {
                     <View style={styles.container}>
                         <View style={[styles.box, styles.box3]}>
                             <Text style ={styles.text_value}>
-                                {information.weather}
+                                {information.rain ? 'Rainy' : 'Sunny'}
                             </Text>
 
                             <Text style ={styles.text_category}>
@@ -145,7 +175,7 @@ const DetailScreen = ({navigation,route}) => {
                         </View>
                         <View style={[styles.box,styles.box4]}>
                             <Text style ={styles.text_value}>
-                                {information.state}
+                                {stateIOT[item.state]}
                             </Text>
 
                             <Text style ={styles.text_category}>
@@ -161,21 +191,32 @@ const DetailScreen = ({navigation,route}) => {
                 <Text style={{fontSize:30,fontWeight:'bold',color:'white',justifyContent:'flex-start',textShadowRadius:10,}}>Flood Warning
                 </Text>
                 <View style={{flexDirection:'row'  }}>
-                    <View style = {[styles.rectangle, { backgroundColor: rectangleColor1 }]} />    
-                    <View style = {[styles.rectangle, { backgroundColor: rectangleColor2 }]} />  
-                    <View style = {[styles.rectangle, { backgroundColor: rectangleColor3 }]} />  
+                    {levelColor[information.flood_level].slice(0,3).map((ele, idx) => (
+                        <View key={idx} style = {[styles.rectangle, { backgroundColor: ele }]} />    
+                    ))}
+                    
+                    {/* <View style = {[styles.rectangle, { backgroundColor: rectangleColor2 }]} />  
+                    <View style = {[styles.rectangle, { backgroundColor: rectangleColor3 }]} />   */}
                 </View>
 
             </View>
             <View style ={{flex:25,justifyContent:'center',alignItems:'center'}}>
                 <View style = {styles.imageBox} >
-                    <Text style={{fontSize:30,fontWeight:'bold',color:'white',textAlign: 'center',textShadowRadius:10,color:textcolor}}>{information.flood}
-                    </Text>
                     <View style={{justifyContent:'center',alignItems:'center'  }}>
+                <Text style={{fontSize:30,fontWeight:'bold',color:'white',textAlign: 'center',textShadowRadius:10,color: levelColor[information.flood_level].slice(-1)[0]}}>{textColor[information.flood_level]}</Text>
+                        {encodeImage !== "" && 
                         <Image
                             style={styles.image}
-                            source={require('../assets/image/dailonguyenvanlinh.jpg')}
-                        />
+                            source={{
+                                uri:  `data:image/jpeg;base64,${encodeImage}`,
+                             }}
+                        /> || 
+                        <Image
+                            style={styles.image}
+                            source={
+                                 require('../assets/image/dailonguyenvanlinh.jpg')
+                             }
+                        />}
                     </View>
   
                 </View>
@@ -218,7 +259,7 @@ const DetailScreen = ({navigation,route}) => {
 
     </LinearGradient>
 
-
+    // <Text>Hello</Text>
             )
 }
 export default DetailScreen;
@@ -320,8 +361,8 @@ const styles = StyleSheet.create({
         borderRadius: 10
     },
     image: {
-        height: 170,
-        width: '90%',
+        height: '80%',
+        width: '60%',
        
     },
     openRectangle: {

@@ -5,6 +5,7 @@
 import React from 'react';
 //import {AppRegistry,Text,View} from 'react-native';
 
+import { StatusBar } from 'react-native';
 import {name as appName} from './app.json';
 
 import { NavigationContainer } from '@react-navigation/native';
@@ -17,6 +18,10 @@ import SearchList from './screen/SearchList'
 
 const Stack = createNativeStackNavigator();
 const app = (props) =>{
+  React.useEffect(() => {
+    StatusBar.setBackgroundColor('#eaa9a9'); 
+    // StatusBar.setTranslucent(true);
+   }, []);
     return (
         <NavigationContainer>
             <Stack.Navigator>
