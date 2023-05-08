@@ -36,13 +36,13 @@ const MainScreen = () => {
               end={{ x: 1, y: 0 }}
               colors={["#fdfdfd", "#fda43c"]}
             >
-              <Pressable>
-              <TouchableOpacity onPress={onPressHandler}>
-                <View style={[{  alignItems:"center",justifyContent: "center" }]}>
+              
+              <TouchableOpacity onPress={onPressHandler} style={{ width: '100%', height: '100%' }}>
+                <View style={[{ width: '100%', height: '100%', alignItems:"center",justifyContent: "center" }]}>
                   <Text style={[styles.start]}>Start</Text>
                 </View>
               </TouchableOpacity>
-              </Pressable>
+              
 
                 </LinearGradient>
           
@@ -90,14 +90,7 @@ export default MainScreen;
         textAlign: "center",
         position: "absolute",
       },
-      detailScreenFirstPageChild: {
-        top: 568,
-        left: 37,
-        borderRadius: 67,
-        width: 333,
-        height: 80,
-        position: "absolute",
-      },
+      
       termAndCondition: {
         textDecorationLine: "underline",
       },
@@ -144,10 +137,7 @@ export default MainScreen;
       detailScreenFirstPage: {
         //borderRadius: Border.br_6xl,
         flex: 1,
-        width: "100%",
-        height: 896,
-        overflow: "hidden",
-        backgroundColor: "transparent",
+        
       },
     },);
   
