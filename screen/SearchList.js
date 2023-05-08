@@ -7,6 +7,7 @@ import { List, ListItem } from "react-native-elements";
 import { FlatList } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import Icon from 'react-native-vector-icons/FontAwesome';
+import serverApi from "../api/serverApi";
 
 const SearchList =({navigation,route}) => {
 
@@ -19,32 +20,47 @@ const SearchList =({navigation,route}) => {
         { 
             device_id: 'IOT 1',
             district: 'District 1',
-            location : '930 Ly Thuong Kiet ',
-            information : {temp: '23°C', humid : '25%', weather: "Rain", state: 'Working', flood: "Low" }
+            address : '930 Ly Thuong Kiet ',
+            state: 1,
+            information : {temp: 41, humid : 0.2, rain:1 ,  flood: 1 }
 
         
         },
         { 
             device_id: 'IOT 2',
             district: 'District 1',
-            location : '330 3/2 ' ,
-            information : {temp: '22°C', humid : '25%', weather: "Rain", state: 'Working', flood: "Critical" }
+            address : '330 3/2 ' ,
+            state: 1,
+            information : {temp: 42, humid : 0.2, rain: 1, flood: 2 }
         
         },
         { 
             device_id: 'IOT 3',
             district: 'District 1',
-            location : '650 Le Duan ' ,
-            information : {temp: '21°C', humid : '25%', weather: "Rain", state: 'Working', flood: "High" }},
+            address : '930 Ly Thuong Kiet ',
+            state: 0,
+            information : {temp: 41, humid : 0.2, rain:0 ,  flood: 3 }
+
+        
+        },
         { 
             device_id: 'IOT 4',
             district: 'District 1',
-            location : '975 To Hien Thanh ',
-            information : {temp: '20°C', humid : '25%', weather: "Rain", state: 'Working', flood: "No flood" }
-        }
+            address : '330 3/2 ' ,
+            state: 0,
+            information : {temp: 42, humid : 0.2, rain: 1, flood: 2 }
+        
+        },
     ])
     
-   
+    React.useEffect(() => {
+        serverApi.get('/getDeviceInfo')
+        .then((res) => {
+           
+            setItems(res.data)
+
+        })
+    }, [])
 
     const ItemView = ({item}) => {
         //const isSelected = selectedDevices.includes(item);
@@ -78,8 +94,8 @@ const SearchList =({navigation,route}) => {
 
                             <View style={{flex: 1, top: 10}}>
                                 <Text style={{fontSize: 20, fontWeight: 'bold', fontFamily: 'Roboto'}}>{item.device_id}</Text>
-                                <Text style={{fontSize: 15, fontFamily: 'Roboto'}}>{item.district}</Text>
-                                <Text style={{fontSize: 15, fontFamily: 'Roboto'}}>{item.location}</Text>
+                                <Text style={{fontSize: 15, fontFamily: 'Roboto'}}>District: {item.district}</Text>
+                                <Text style={{fontSize: 15, fontFamily: 'Roboto'}}>{item.address}</Text>
                             </View>
                     </View>
                 </TouchableOpacity>

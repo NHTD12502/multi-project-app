@@ -6,37 +6,56 @@ import { FontFamily } from "../utilities/GlobalStyles";
 import { List, ListItem } from "react-native-elements";
 import { FlatList } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
+import serverApi from "../api/serverApi";
 
 
 const RecommendScreen =(props) => {
     
     const [Items, setItems] = React.useState([
         { 
-            device_id: 'IOT 33',
+            device_id: 'IOT 1',
             district: 'District 1',
             location : '930 Ly Thuong Kiet ',
-            information : {temp: '27°C', humid : '25%', weather: "Rain", state: 'Working', flood: "No flood"}
-         },
-        { 
-            device_id: 'IOT 12',
-            district: 'District 1',
-            location : '930 Ly Thuong Kiet ' ,
-            information : {temp: '32°C', humid : '25%', weather: "Rain", state: 'Working', flood: "Low"}
+            state: 1,
+            information : {temp: 41, humid : 0.2, rain:1 ,  flood: 1 }
+
+        
         },
         { 
-            device_id: 'IOT 14',
+            device_id: 'IOT 2',
             district: 'District 1',
-            location : '930 Ly Thuong Kiet ',
-            information : {temp: '31°C', humid : '25%', weather: "Rain", state: 'Working', flood: "High"}
+            address : '330 3/2 ' ,
+            state: 1,
+            information : {temp: 42, humid : 0.2, rain: 1, flood: 2 }
+        
         },
         { 
-            device_id: 'IOT 20',
+            device_id: 'IOT 3',
             district: 'District 1',
-            location : '930 Ly Thuong Kiet ',
-            information : {temp: '30°C', humid : '25%', weather: "Rain", state: 'Working', flood: "Critical"}
-        }
+            address : '930 Ly Thuong Kiet ',
+            state: 0,
+            information : {temp: 41, humid : 0.2, rain:0 ,  flood: 3 }
+
+        
+        },
+        { 
+            device_id: 'IOT 4',
+            district: 'District 1',
+            address : '330 3/2 ' ,
+            state: 0,
+            information : {temp: 42, humid : 0.2, rain: 1, flood: 2 }
+        
+        },
     ])
 
+    React.useEffect(() => {
+        serverApi.get('/getDeviceInfo')
+        .then((res) => {
+           
+            setItems(res.data)
+
+        })
+    }, [])
 
     const [selectedDevices, setSelectedDevices] = React.useState([]);
 
@@ -106,8 +125,8 @@ const RecommendScreen =(props) => {
 
                             <View style={{flex: 1, top: 10}}>
                                 <Text style={{fontSize: 20, fontWeight: 'bold', fontFamily: 'Roboto'}}>{item.device_id}</Text>
-                                <Text style={{fontSize: 15, fontFamily: 'Roboto'}}>{item.district}</Text>
-                                <Text style={{fontSize: 15, fontFamily: 'Roboto'}}>{item.location}</Text>
+                                <Text style={{fontSize: 15, fontFamily: 'Roboto'}}>District: {item.district}</Text>
+                                <Text style={{fontSize: 15, fontFamily: 'Roboto'}}>{item.address}</Text>
                             </View>
                     </View>
                 </TouchableOpacity>
