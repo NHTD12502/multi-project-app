@@ -169,13 +169,18 @@ const DetailScreen = ({navigation,route}) => {
             </View>
             <View style ={{flex:25,justifyContent:'center',alignItems:'center'}}>
                 <View style = {styles.imageBox} >
-                    <Text style={{fontSize:30,fontWeight:'bold',color:'white',textAlign: 'center',textShadowRadius:10,color:textcolor}}>{information.flood}
-                    </Text>
-                    <View style={{justifyContent:'center',alignItems:'center'  }}>
-                        <Image
-                            style={styles.image}
-                            source={require('../assets/image/dailonguyenvanlinh.jpg')}
-                        />
+                    <View style={{flex:1}}>
+                        <Text style={{fontSize:30,fontWeight:'bold',color:'white',textAlign: 'center',textShadowRadius:10,color:textcolor}}>{information.flood}
+                        </Text>
+                    </View>
+                    <View style={{flex:5}}>
+
+                        <View style={{justifyContent:'center',alignItems:'center' }}>
+                            <Image
+                                style={styles.image}
+                                source={require('../assets/image/dailonguyenvanlinh.jpg')}
+                            />
+                        </View>
                     </View>
   
                 </View>
@@ -320,7 +325,7 @@ const styles = StyleSheet.create({
         borderRadius: 10
     },
     image: {
-        height: 170,
+        height: "98%",
         width: '90%',
        
     },

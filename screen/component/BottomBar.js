@@ -20,26 +20,26 @@ const BottomBar = ({ selectedDevices,screenName }) => {
             const backgroundColor = item.device_id === screenName ? '#C2771E' : 'transparent';
             return <TouchableOpacity style={{ alignItems: 'center'  }} onPress={() => handleSelectDevice(item)}>
                 <View style={{
-                      width: 70,
-                      height: 70,
+                      width: 60,
+                      height: 60,
                       borderRadius: 40,
                       padding:10,
                       marginTop:5,
                       marginHorizontal: 10,
-                      backgroundColor, // replace with your desired color
+                      backgroundColor, 
                       alignItems: 'center',
                       justifyContent: 'center',
                   }}>
                       <Image 
                           style ={{
-                              width: 60,
-                              height: 60,
-                              borderRadius: 30,
+                              width: 50,
+                              height: 50,
+                              borderRadius: 25,
                           }}
                           source={require('../../assets/image/enapter-power-supply-unit-2.png')}
                       />
                   </View>
-                    <Text style={{fontWeight:'regular',color:'black'}}>{item.device_id}</Text>
+                    <Text style={{fontWeight:"600",color:'black',fontSize: 11}}>{item.device_id}</Text>
 
             </TouchableOpacity>
         }}
